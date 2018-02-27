@@ -30,7 +30,7 @@ def plot_performance_calendar(subj, data_to_analyze, disp_counts=False, vmins=(0
     '''
     plots a calendar view of performance for a subject.
     Plots all trials from data_to_analyze so make sure it is filtered.
-    
+
     Parameters:
     -----------
     subj : str
@@ -58,15 +58,15 @@ def plot_performance_calendar(subj, data_to_analyze, disp_counts=False, vmins=(0
     cmaps = [plt.get_cmap(cmap) for cmap in ('Oranges', 'RdYlBu', 'BuGn')]
     for cmap in cmaps:
         cmap.set_bad(color='Grey')
-    
+
     pivoted = aggregated.pivot('hour', 'date')
-    
+
     for i, (column, title, cmap, vmin, vmax) in enumerate(zip(columns, titles, cmaps, vmins, vmaxs)):
-        g = sns.heatmap(pivoted[column], annot=disp_counts, ax=ax[i], 
+        g = sns.heatmap(pivoted[column], annot=disp_counts, ax=ax[i],
                         cmap=cmap, cbar=not disp_counts,
                         vmin=vmin, vmax=vmax)
         g.set_title(title)
-    g.set_xticklabels(_date_labels(pivoted.keys().levels[1]));
+    g.set_xticklabels(_date_labels(list(pivoted.keys()).levels[1]));
 
 
 def plot_filtered_accperstim(title,df,num_days=7, **kwargs):
@@ -113,8 +113,8 @@ def plot_accperstim(title, data_to_analyze, stim_ids='stimulus', stims_all=None,
     cmap = sns.diverging_palette(15, 250, as_cmap=True)
     cmap.set_bad(color = 'k', alpha = 0.5)
     plt.figure()
-    g = sns.heatmap(pivoted, vmin=0, vmax=1, cmap=cmap, 
-                    xticklabels=_date_labels(pivoted.keys().values),
+    g = sns.heatmap(pivoted, vmin=0, vmax=1, cmap=cmap,
+                    xticklabels=_date_labels(list(pivoted.keys()).values),
                     yticklabels=yticklabels)
     g.set_title(title)
 
@@ -122,7 +122,7 @@ def plot_daily_accuracy(subj, df, x_axis='trial_num', smoothing='gaussian', day_
     '''
     plots the accuracy of the subject throughout the day.
     a preset for the more general plot_accuracy_bias
-    
+
     Parameters:
     -----------
     subj : str
@@ -132,13 +132,13 @@ def plot_daily_accuracy(subj, df, x_axis='trial_num', smoothing='gaussian', day_
     x_axis : str
         whether to plot 'time' or 'trial_num' along the x axis
     smoothing : str
-        whether to smooth using 'exponential', 'rolling' average, 
+        whether to smooth using 'exponential', 'rolling' average,
         'gaussian' filter'
     day_lim : None or non-negative int
         max number of days of trials to include. Zero means just today.
     '''
-    plot_accuracy_bias(subj, df, x_axis=x_axis, smoothing=smoothing, trial_lim=None, day_lim=day_lim, 
-                        plt_correct_smoothed=True, plt_correct_shade=True, plt_correct_line=True, 
+    plot_accuracy_bias(subj, df, x_axis=x_axis, smoothing=smoothing, trial_lim=None, day_lim=day_lim,
+                        plt_correct_smoothed=True, plt_correct_shade=True, plt_correct_line=True,
                         plt_L_response_smoothed=False, plt_L_response_shade=False, plt_L_response_line=False,
                         plt_R_response_smoothed=False, plt_R_response_shade=False, plt_R_response_line=False,
                         plt_ci=False, block_size=100)
@@ -147,7 +147,7 @@ def plot_ci_accuracy(subj, df, x_axis='time', day_lim=7, trial_lim=None, bias=Tr
     '''
     plots the accuracy (and bias) of the subject throughout the day.
     a preset for the more general plot_accuracy_bias
-    
+
     Parameters:
     -----------
     subj : str
@@ -164,19 +164,19 @@ def plot_ci_accuracy(subj, df, x_axis='time', day_lim=7, trial_lim=None, bias=Tr
         whether to plot the line for the left bias
     '''
     plot_accuracy_bias(subj, df, x_axis=x_axis, smoothing='rolling', trial_lim=None, day_lim=day_lim,
-                        plt_correct_smoothed=True, plt_correct_shade=False, plt_correct_line=False, 
+                        plt_correct_smoothed=True, plt_correct_shade=False, plt_correct_line=False,
                         plt_L_response_smoothed=bias, plt_L_response_shade=False, plt_L_response_line=False,
                         plt_R_response_smoothed=False, plt_R_response_shade=False, plt_R_response_line=False,
                         plt_ci=True, block_size=100)
 
-def plot_accuracy_bias(subj, df, x_axis='time', smoothing='exponential', trial_lim=None, day_lim=7, 
-                        plt_correct_smoothed=True, plt_correct_shade=True, plt_correct_line=True, 
+def plot_accuracy_bias(subj, df, x_axis='time', smoothing='exponential', trial_lim=None, day_lim=7,
+                        plt_correct_smoothed=True, plt_correct_shade=True, plt_correct_line=True,
                         plt_L_response_smoothed=False, plt_L_response_shade=False, plt_L_response_line=False,
                         plt_R_response_smoothed=False, plt_R_response_shade=False, plt_R_response_line=False,
                         plt_ci=False, block_size=100):
     '''
     plots the accuracy or bias of the subject.
-    
+
     Parameters:
     -----------
     subj : str
@@ -186,7 +186,7 @@ def plot_accuracy_bias(subj, df, x_axis='time', smoothing='exponential', trial_l
     x_axis : str
         whether to plot 'time' or 'trial_num' along the x axis
     smoothing : str
-        whether to smooth using 'exponential', 'rolling' average, 
+        whether to smooth using 'exponential', 'rolling' average,
         'gaussian' filter'
     trial_lim : None or int
         max number of most recent trials to include
@@ -199,7 +199,7 @@ def plot_accuracy_bias(subj, df, x_axis='time', smoothing='exponential', trial_l
     plt_{correct, L_response, R_response}_line : boolean
         whether to plot a red line of the actual responses
     '''
-    fig = plt.figure(figsize=(16, 2)) 
+    fig = plt.figure(figsize=(16, 2))
     if trial_lim is not None:
         df = df[-trial_lim:]
     if day_lim is not None:
@@ -213,12 +213,12 @@ def plot_accuracy_bias(subj, df, x_axis='time', smoothing='exponential', trial_l
         use_index=False
     else:
         raise Exception('invalid value for x_axis')
-    
+
     datas = (df['correct'], df['response']=='L', df['response']=='R')
     plot_smoothed_mask = (plt_correct_smoothed, plt_L_response_smoothed, plt_R_response_smoothed)
     plot_shaded_mask = (plt_correct_shade, plt_L_response_shade, plt_R_response_shade)
     plot_line_mask = (plt_correct_line, plt_L_response_line, plt_R_response_line)
-    
+
     for data, smoothed, shaded, line in zip(datas, plot_smoothed_mask, plot_shaded_mask, plot_line_mask):
         if shaded:
             plt.fill_between(x, .5, data.values.astype(bool), color = 'r', alpha = .25)
@@ -244,7 +244,7 @@ def plot_accuracy_bias(subj, df, x_axis='time', smoothing='exponential', trial_l
 def plot_trial_feeds(behav_data, num_days=7):
     '''
     plots numer of trials and number of feeds for all birds across time
-    
+
     Parameters:
     -----------
     behav_data : dict of pandas dataframes
@@ -257,13 +257,13 @@ def plot_trial_feeds(behav_data, num_days=7):
     ax1 = fig.gca()
     ax2 = ax1.twinx()
 
-    for (subj, df), color in zip(behav_data.items(), colors):
+    for (subj, df), color in zip(list(behav_data.items()), colors):
         data_to_analyze = utils.filter_recent_days(df, num_days).copy()
         if not data_to_analyze.empty:
             data_to_analyze['date'] = data_to_analyze.index.date
             blocked = data_to_analyze.groupby('date')
 
-            days = np.sort(blocked.groups.keys())
+            days = np.sort(list(blocked.groups.keys()))
             trials_per_day = blocked['response'].count().values
             line = ax1.plot(days, trials_per_day, label=subj + ' trials per day', c=color)
             if len(days) == 1:
